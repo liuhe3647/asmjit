@@ -259,8 +259,8 @@ Error X86RAPass::emitSwapGp(VirtReg* dstReg, VirtReg* srcReg, uint32_t dstPhysId
   ASMJIT_ASSERT(srcPhysId != Globals::kInvalidRegId);
 
   uint32_t is64 = std::max(dstReg->getTypeId(), srcReg->getTypeId()) >= TypeId::kI64;
-  uint32_t sign = is64 ? uint32_t(X86RegTraits<X86Reg::kRegGpd>::kSignature)
-                       : uint32_t(X86RegTraits<X86Reg::kRegGpq>::kSignature);
+  uint32_t sign = is64 ? uint32_t(X86RegTraits<X86Reg::kRegGpq>::kSignature)
+                       : uint32_t(X86RegTraits<X86Reg::kRegGpd>::kSignature);
 
   X86Reg a = X86Reg::fromSignature(sign, dstPhysId);
   X86Reg b = X86Reg::fromSignature(sign, srcPhysId);
@@ -4007,6 +4007,7 @@ _NextGroup:
           else if (node_->isRet()) {
             ASMJIT_PROPAGATE(
               X86RAPass_translateRet(this, static_cast<CCFuncRet*>(node_), func->getExitNode()));
+            goto _NextGroup;
           }
           break;
         }
