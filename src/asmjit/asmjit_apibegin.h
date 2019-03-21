@@ -53,6 +53,12 @@
 // [GCC]
 #if ASMJIT_CC_GCC
 # pragma GCC diagnostic push
+# if ASMJIT_CC_GCC_GE(7, 0, 0)
+#  pragma GCC diagnostic ignored "-Wbool-operation"
+# endif
+# if ASMJIT_CC_GCC_GE(8, 0, 0)
+#  pragma GCC diagnostic ignored "-Wclass-memaccess"
+# endif
 #endif // ASMJIT_CC_GCC
 
 // [MSC]
@@ -66,6 +72,7 @@
 # pragma warning(disable: 4355) // this used in base member initializer list
 # pragma warning(disable: 4480) // specifying underlying type for enum
 # pragma warning(disable: 4800) // forcing value to bool 'true' or 'false'
+# pragma warning(disable: 4838) // comversion from 'int' to ...
 # if _MSC_VER < 1900
 #  if !defined(vsnprintf)
 #   define ASMJIT_UNDEF_VSNPRINTF

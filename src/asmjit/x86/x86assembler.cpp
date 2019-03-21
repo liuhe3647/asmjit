@@ -2837,6 +2837,10 @@ CaseExtRm:
       isign3 &= 0x3F;
       goto CaseVexRm;
 
+    case X86Inst::kEncodingVexRm_Wx:
+      ADD_REX_W(X86Reg::isGpq(o0) | X86Reg::isGpq(o1));
+      goto CaseVexRm;
+
     case X86Inst::kEncodingVexRm_Lx:
       opCode |= x86OpCodeLBySize(o0.getSize() | o1.getSize());
       ASMJIT_FALLTHROUGH;
@@ -2937,7 +2941,7 @@ CaseVexRvm_R:
       ASMJIT_FALLTHROUGH;
 
     case X86Inst::kEncodingVexRvm_Wx:
-      ADD_REX_W(X86Reg::isGpq(o0) | X86Reg::isGpq(o1));
+      ADD_REX_W(X86Reg::isGpq(o0) | (o2.getSize() == 8));
       goto CaseVexRvm;
 
     case X86Inst::kEncodingVexRvm_Lx:
@@ -3866,7 +3870,8 @@ EmitModSib_LabelRip_X86:
   else if (!(rmInfo & kX86MemInfo_67H_X86)) {
     // ESP|RSP can't be used as INDEX in pure SIB mode, however, VSIB mode
     // allows XMM4|YMM4|ZMM4 (that's why the check is before the label).
-    if (ASMJIT_UNLIKELY(rxReg == X86Gp::kIdSp)) goto InvalidAddressIndex;
+    if (ASMJIT_UNLIKELY(rxReg == X86Gp::kIdSp))
+      goto InvalidAddressIndex;
 
 EmitModVSib:
     rxReg &= 0x7;
